@@ -1,0 +1,11 @@
+version: '3.9'
+services:
+  xray-core:
+    image: teddysun/xray
+    container_name: xray-core
+    volumes:
+      - $PWD/db/:/etc/xray
+      - $PWD/db/cert:/root/cert
+      - /dev/shm/:/dev/shm/
+    restart: always
+    network_mode: host

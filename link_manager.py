@@ -1,0 +1,149 @@
+#!/usr/bin/env python
+
+import logging
+import requests
+import json
+import base64
+
+from sqlitedb import SQLiteDB
+from utils import get_cf_ip
+
+# Enable logging
+logging.basicConfig(format="%(asctime)s - %(name)s - %(levelname)s - %(message)s", level=logging.INFO)
+logger = logging.getLogger(__name__)
+
+class LinkManager:
+    def __init__(self, config):
+        self.db = SQLiteDB(config['db_path'])
+        self.config = config
+        
+    def register_id(self,telegram_id,telegram_username):
+        if self.db.get_uuid(telegram_id):
+            return True
+        else:
+            if int(self.db.count_users_with_telegram_id)> self.config['max_users']:
+                return False
+
+            self.db.register_telegram_id(telegram_id=telegram_id,telegram_username=telegram_username,traffic_limit=self.config['traffic_limit'])
+            return True
+
+    def get_link_trojan(self, telegram_id,telegram_username):
+        if not self.register_id(telegram_id,telegram_username):
+            return False, ["Server is full."]
+
+        user_uuid = self.db.get_uuid(telegram_id)
+        if user_uuid is None:
+            return False, ["Error connetion to server database."]
+
+        urls ={}
+        urls['Trojan-WS'] = self.trojan_ws_cdn(user_uuid, telegram_id)
+        urls['Trojan-gRPC'] = self.trojan_grpc_cdn(user_uuid, telegram_id)
+        return True, urls
+
+    def get_link_vless(self, telegram_id,telegram_username):
+        if not self.register_id(telegram_id,telegram_username):
+            return False, ["Server is full."]
+
+        user_uuid = self.db.get_uuid(telegram_id)
+        if user_uuid is None:
+             return False, ["Error connetion to server database."]
+
+        urls ={}
+        urls['VLESS-WS'] = self.vless_ws_cdn(user_uuid, telegram_id)
+        urls['VLESS-gRPC'] = self.vless_grpc_cdn(user_uuid, telegram_id)
+        return True, urls
+
+    def get_link_vmess(self, telegram_id,telegram_username):
+        if not self.register_id(telegram_id,telegram_username):
+            return False, ["Server is full."]
+
+        user_uuid = self.db.get_uuid(telegram_id)
+        if user_uuid is None:
+             return False, ["Error connetion to server database."]
+
+        urls ={}
+        urls['VMess-WS'] = self.vmess_ws_cdn(user_uuid, telegram_id)
+        urls['VMess-gRPC'] = self.vmess_grpc_cdn(user_uuid, telegram_id)
+        return True, urls
+
+
+    def trojan_grpc_cdn(self, uuid, telegram_id):
+        url = f"trojan://{uuid}@ircd-{telegram_id}.womanlifefreedom.vip:443?security=tls&type=grpc&serviceName=trgrpc&mode=gun#@WomanLifeFreedom-TgRPC"
+        urls = LinkManager.alternate_vless_trojan(url)
+        return urls
+    
+    def trojan_ws_cdn(self, uuid, telegram_id):
+        url = f"trojan://{uuid}@ircd-{telegram_id}.womanlifefreedom.vip:443?security=tls&alpn=http%2F1.1&type=ws&path=%2Ftrojanws%3Fed%3D2048#@WomanLifeFreedom-Tws"
+        urls = LinkManager.alternate_vless_trojan(url)
+        return urls
+
+    def vless_grpc_cdn(self, uuid, telegram_id):
+        url = f"vless://{uuid}@ircd-{telegram_id}.womanlifefreedom.vip:443?encryption=none&security=tls&type=grpc&serviceName=vlgrpc&mode=gun#@WomanLifeFreedom-VLESSgRPC"
+        urls = LinkManager.alternate_vless_trojan(url)
+        return urls
+    
+    def vless_ws_cdn(self, uuid, telegram_id):
+        url = f"vless://{uuid}@ircd-{telegram_id}.womanlifefreedom.vip:443?encryption=none&security=tls&type=ws&path=%2Fvlws#@WomanLifeFreedom-VLESSws"
+        urls = LinkManager.alternate_vless_trojan(url)
+        return urls
+    
+    def vmess_ws_cdn(self, uuid, telegram_id):
+        data = {"v": "2", "ps": "@WomanLifeFreedom-VMessws", "add": f"ircd-{telegram_id}.womanlifefreedom.vip", "port": "443", "id": uuid, "aid": "0", "scy": "none",
+        "net": "ws", "type": "none", "host": "", "path": "/vmws", "tls": "tls", "sni": "", "alpn": "http/1.1" }
+
+        json_string = json.dumps(data)
+        base64_encoded_string = base64.b64encode(json_string.encode()).decode()
+        url = f"vmess://{base64_encoded_string}"
+        urls = LinkManager.alternate_vmess(url)
+        return urls
+    
+    def vmess_grpc_cdn(self, uuid, telegram_id):
+        data = {"v": "2", "ps": "@WomanLifeFreedom-VMessws", "add": f"ircd-{telegram_id}.womanlifefreedom.vip", "port": "443", "id": uuid, "aid": "0", "scy": "none",
+        "net": "grpc", "type": "http", "host": "", "path": "vmgrpc", "tls": "tls", "sni": "", "alpn": "" }
+        json_string = json.dumps(data)
+        base64_encoded_string = base64.b64encode(json_string.encode()).decode()
+        url = f"vmess://{base64_encoded_string}"
+        urls = LinkManager.alternate_vmess(url)
+        return urls
+
+    @staticmethod
+    def alternate_vless_trojan(url):
+        cf_good_ips = get_cf_ip()
+        cf_ips=[{"NAME":"iranserver.com","IP":"iranserver.com","TIME":None,"DESC":"2"}]
+        cf_ips+=cf_good_ips
+        host = url.split('@')[1].split(':')[0]
+        urls = [url]
+        for cf_ip in cf_ips:
+            if cf_ip["IP"]:
+                new_url = url.replace(host, cf_ip["IP"])
+                url_parts = new_url.split("#")
+                new_url = url_parts[0] + f"&host={host}&sni={host}#" + url_parts[1] + f'-{cf_ip["DESC"]}'
+                urls.append(new_url)
+        return urls
+
+    @staticmethod
+    def alternate_vmess(url):    
+        cf_good_ips = get_cf_ip()
+        cf_ips = []
+        # cf_ips=[{"NAME":"iranserver.com","IP":"iranserver.com","TIME":None,"DESC":"2"}]
+        cf_ips+=cf_good_ips
+        urls = [url]
+        url = url[8:]
+        json_string = base64.b64decode(url).decode()
+        data = json.loads(json_string)
+        for cf_ip in cf_ips:
+            if cf_ip["Name"] not in ["MCI","IRC"]:
+                continue
+            
+            data_new = dict(data)
+            data_new['sni'] = data['add']
+            data_new['host'] = data['add']
+
+            if cf_ip["IP"]:
+                data_new['add'] = cf_ip["IP"]
+                data_new['ps'] +=  f'-{cf_ip["DESC"]}'
+                json_string = json.dumps(data_new)
+                base64_encoded_string = base64.b64encode(json_string.encode()).decode()
+                new_url = f'vmess://{base64_encoded_string}'
+                urls.append(new_url)
+        return urls
