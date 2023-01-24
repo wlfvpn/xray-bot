@@ -1,0 +1,5 @@
+db/*
+config.yaml
+*.code-workspace
+*.pyc
+*.db
