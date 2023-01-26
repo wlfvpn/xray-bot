@@ -21,7 +21,7 @@ class LinkManager:
         if self.db.get_uuid(telegram_id):
             return True
         else:
-            if int(self.db.count_users_with_telegram_id)> self.config['max_users']:
+            if int(self.db.count_users_with_telegram_id())> self.config['max_users']:
                 return False
 
             self.db.register_telegram_id(telegram_id=telegram_id,telegram_username=telegram_username,traffic_limit=self.config['traffic_limit'])

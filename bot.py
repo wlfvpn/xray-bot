@@ -98,7 +98,7 @@ async def gen_report(update: Update, context: ContextTypes.DEFAULT_TYPE):
 async def gen_outline(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await context.bot.send_message(chat_id=update.effective_chat.id, text="درحال برقراری ارتباط با سرور. لطفا چند دقیقه صبر کنید...")
     email = str(update.effective_user.id)+"@telegram.com"
-    email = "test@test10"
+    logging.info(f'OUTLINE, Gave link to @{update.effective_user.username}')
 
     status, url = await get_outline_key(email)
     if status == 200:

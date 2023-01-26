@@ -13,7 +13,7 @@ def get_cf_ip():
     url = "http://bot.sudoer.net/best.cf.iran"
     response = requests.get(url)
     data = response.text.strip().split('\n')
-    net = defaultdict(str, {"MCI":"HamrahAval", "RTL":"Rightel", "AST":"Asiatek", "IRC":"Irancel", "SHT":"Shatel", "MKB":"Mokhaberat", "MBT":"Mobinnet", "ZTL":"Zitel"})
+    net = defaultdict(str, {"MCI":"HamrahAval", "RTL":"Rightel", "AST":"Asiatek", "IRC":"Irancel", "SHT":"Shatel", "MKB":"Mokhaberat", "MBT":"Mobinnet", "ZTL":"Zitel", "PRS":"ParsOnline"})
     data_list = []
     for i in data:
         parts = i.split()
