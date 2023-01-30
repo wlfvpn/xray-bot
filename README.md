@@ -8,7 +8,8 @@ These instructions will guide you through the setup process of Xray-Bot.
 
 - Get your certificates and put it in the `db/cert/{site_name}` folder.
 - Update `main.py` to point to your subscription domain certificate.
-- Update `scripts/base.json` with your VPN certificates in `db/cert/{site_name}`. A wildcard certificate is needed.
+- Update `scripts/base.json` with your VPN certificates in `db/cert/{site_name}`. A wildcard certificate is needed. path should be in the container path.
+ `db/cert/` is mounted to `/root/cert` in the container.  
 - Install Python3 pip by running `apt install python3-pip`
 - Install the required packages by running `pip install -r requirements.txt`
 - To-Do: Make everything in the docker-compose as different services.
