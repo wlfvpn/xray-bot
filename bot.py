@@ -113,8 +113,10 @@ async def gen_report(update: Update, context: ContextTypes.DEFAULT_TYPE):
 async def get_sub(update: Update, context: ContextTypes.DEFAULT_TYPE):
     logging.info(
         f'Subscription, Gave sub to @{update.effective_user.username}')
-
-    link = '`'+link_manager.get_sub(str(update.effective_user.id))+'`'
+    await context.bot.send_message(chat_id=update.effective_chat.id, text="لینک سابسکریپشن اگه اولی نشد دومی رو بزنید. هر دو یکین نیاز نیست هر دو رو بزنید.")
+    link = '`'+link_manager.get_sub(str(update.effective_user.id))[0]+'`'
+    await context.bot.send_message(chat_id=update.effective_chat.id, text=link, parse_mode="MarkdownV2")
+    link = '`'+link_manager.get_sub(str(update.effective_user.id))[1]+'`'
     await context.bot.send_message(chat_id=update.effective_chat.id, text=link, parse_mode="MarkdownV2")
 
 

@@ -187,6 +187,6 @@ class LinkManager:
         Returns the link to your subscription.
         """
         user_uuid = self.db.get_uuid(telegram_id)
-        url = f"https://{self.config['subscription']['domain']}:{self.config['subscription']['port']}/subscriptions?token={user_uuid}"
+        url = [f"https://{self.config['subscription']['domain']}:{self.config['subscription']['https_port']}/subscriptions?token={user_uuid}",f"http://{self.config['subscription']['domain']}:{self.config['subscription']['http_port']}/subscriptions?token={user_uuid}"]
         return url
     
