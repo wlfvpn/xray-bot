@@ -2,7 +2,7 @@ version: '3.9'
 services:
   xray-core:
     image: teddysun/xray
-    container_name: xray-core
+    container_name: xray-bot
     volumes:
       - $PWD/db/:/etc/xray
       - $PWD/db/cert:/root/cert

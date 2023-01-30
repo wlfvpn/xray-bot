@@ -48,7 +48,7 @@
         "clients": [
           {
             "email": "general@vless-tcp-xtls",
-            "id": "7e0a39a8-17e1-42c5-ad68-1e7e564866ca",
+            "id": "7e0a39a8-17e1-41c5-ad68-1e7e564866ca",
             "flow": "xtls-rprx-vision",
             "level": 0
           }
@@ -127,8 +127,8 @@
           "certificates": [
             {
               "ocspStapling": 3600,
-              "certificateFile": "/root/cert/fullchain.pem",
-              "keyFile": "/root/cert/privkey.pem"
+              "certificateFile": "/root/xray-bot/db/cert/wlfvip.com/fullchain.pem",
+              "keyFile": "/root/xray-bot/db/cert/wlfvip.com/privkey.pem"
             }
           ],
           "minVersion": "1.2",
@@ -154,7 +154,7 @@
         "clients": [
           {
             "email":"general@vless-ws",
-            "id": "7e0a39a8-17e1-42c5-ad68-1e7e564866ca",
+            "id": "7e0a39a8-17e1-41c5-ad68-1e7e564866ca",
             "level": 0
           }
         ],
@@ -183,7 +183,7 @@
         "clients": [
           { 
             "email": "general@vmess-ws",
-            "id": "7e0a39a8-17e1-42c5-ad68-1e7e564866ca",
+            "id": "7e0a39a8-17e1-41c5-ad68-1e7e564866ca",
             "level": 0
           }
         ]
@@ -211,7 +211,7 @@
         "clients": [
           {  
             "email":"general@trojan-ws",
-            "id": "7e0a39a8-17e1-42c5-ad68-1e7e564866ca",
+            "password": "7e0a39a8-17e1-41c5-ad68-1e7e564866ca",
             "level": 0
           }
         ]
@@ -239,7 +239,7 @@
       "protocol": "shadowsocks",
       "settings": {
         "method": "chacha20-ietf-poly1305",
-        "password": "desdemona99"
+        "password": "7e0a39a8-17e1-41c5-ad68-1e7e564866ca"
       },
       "streamSettings": {
         "network": "ws",
@@ -262,8 +262,8 @@
       "settings": {
         "clients": [
           {
-            "email":"general@vmess-tcp",
-            "password": "7e0a39a8-17e1-42c5-ad68-1e7e564866ca",
+            "email":"general@trojan-tcp",
+            "password": "7e0a39a8-17e1-41c5-ad68-1e7e564866ca",
             "level": 0
           }
         ],
@@ -296,7 +296,7 @@
         "clients": [
           {
             "email":"general@vless-tcp",
-            "id": "7e0a39a8-17e1-42c5-ad68-1e7e564866ca",
+            "id": "7e0a39a8-17e1-41c5-ad68-1e7e564866ca",
             "level": 0          }
         ],
         "decryption": "none"
@@ -331,7 +331,7 @@
         "clients": [
           {
             "email":"general@vmess-tcp",
-            "id": "7e0a39a8-17e1-42c5-ad68-1e7e564866ca",
+            "id": "7e0a39a8-17e1-41c5-ad68-1e7e564866ca",
             "level": 0
           }
         ]
@@ -371,7 +371,7 @@
       "protocol": "shadowsocks",
       "settings": {
         "method": "chacha20-ietf-poly1305",
-        "password": "desdemona99"
+        "password": "7e0a39a8-17e1-41c5-ad68-1e7e564866ca"
       },
       "streamSettings": {
         "network": "tcp",
@@ -404,12 +404,8 @@
         "clients": [
           {
             "email": "general@trojan-grpc",
-            "password": "7e0a39a8-17e1-42c5-ad68-1e7e564866ca",
+            "password": "7e0a39a8-17e1-41c5-ad68-1e7e564866ca",
             "level":0
-          },
-          {
-            "email": "love@trojan-grpc",
-            "password": "desdemona99"
           }
         ]
       },
@@ -437,7 +433,7 @@
         "clients": [
           { 
             "email":"general@vless-grpc",
-            "id": "7e0a39a8-17e1-42c5-ad68-1e7e564866ca",
+            "id": "7e0a39a8-17e1-41c5-ad68-1e7e564866ca",
             "level": 0
           }
         ],
@@ -460,7 +456,7 @@
         "clients": [
           { 
             "email":"general@vmess-grpc",
-            "id": "7e0a39a8-17e1-42c5-ad68-1e7e564866ca",
+            "id": "7e0a39a8-17e1-41c5-ad68-1e7e564866ca",
             "level": 0
           }
         ]
@@ -479,7 +475,7 @@
       "protocol": "shadowsocks",
       "settings": {
         "method": "chacha20-ietf-poly1305",
-        "password": "desdemona99",
+        "password": "7e0a39a8-17e1-41c5-ad68-1e7e564866ca",
         "email": "2011@ss"
       },
       "streamSettings": {
@@ -503,7 +499,7 @@
       "settings": {
         "clients": [
           {
-            "password": "desdemona99"
+            "password": "7e0a39a8-17e1-41c5-ad68-1e7e564866ca"
           }
         ]
       },
@@ -520,8 +516,8 @@
       "protocol": "vless",
       "settings": {
         "clients": [
-          { "email":"general@vmess-h2",
-            "id": "7e0a39a8-17e1-42c5-ad68-1e7e564866ca",
+          { "email":"general@vless-h2",
+            "id": "7e0a39a8-17e1-41c5-ad68-1e7e564866ca",
             "level": 0
           }
         ],
@@ -548,7 +544,7 @@
       "settings": {
         "clients": [
           { "email":"general@vmess-h2",
-            "id": "7e0a39a8-17e1-42c5-ad68-1e7e564866ca",
+            "id": "7e0a39a8-17e1-41c5-ad68-1e7e564866ca",
             "level": 0
           }
         ]
@@ -575,7 +571,7 @@
       "protocol": "shadowsocks",
       "settings": {
         "method": "chacha20-ietf-poly1305",
-        "password": "desdemona99",
+        "password": "7e0a39a8-17e1-41c5-ad68-1e7e564866ca",
         "email": "2011@ss-h2"
       },
       "streamSettings": {
@@ -601,7 +597,7 @@
     },
     {
       "protocol": "blackhole",
-      "tag": "blackhole"
+      "tag": "blocked"
     },
     {
       "tag": "DNS-Internal",
