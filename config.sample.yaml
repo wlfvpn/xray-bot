@@ -15,4 +15,5 @@ cloudflare:
 subscription:
   domain: "wlfvip.a2.store"
   ip: "165.129.27.125"
-  port: 8443
+  https_port: 8443
+  http_port: 8080
