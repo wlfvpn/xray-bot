@@ -182,8 +182,11 @@ class LinkManager:
                 urls.append(new_url)
         return urls
 
-    def get_sub(self,telegram_id):
+    def get_sub(self, telegram_id):
+        """
+        Returns the link to your subscription.
+        """
         user_uuid = self.db.get_uuid(telegram_id)
-        url = f"https://wlfvip.au1.store:8443/subscriptions?token={user_uuid}"
+        url = f"https://{self.config['subscription']['domain']}:{self.config['subscription']['port']}/subscriptions?token={user_uuid}"
         return url
     

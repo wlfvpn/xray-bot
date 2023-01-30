@@ -12,3 +12,7 @@ cloudflare:
   prefix_subdomain_name: "cdir-"
   domain: "wlfvip.com"
   ip: "25.129.222.125"
+subscription:
+  domain: "wlfvip.a2.store"
+  ip: "165.129.27.125"
+  port: 8443
