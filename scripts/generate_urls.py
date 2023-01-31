@@ -22,7 +22,7 @@ port = 443
 ##############################################################################
 
 # Open the file
-with open('{repo_folder}/scripts/base.json', 'r') as file:
+with open(f'{repo_folder}/scripts/base.json', 'r') as file:
     # Load the JSON data from the file
     data = json.load(file)
 db = SQLiteDB(db_path)

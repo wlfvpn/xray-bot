@@ -3,6 +3,8 @@ from link_manager import LinkManager
 from utils import load_config
 import base64
 from fastapi.responses import PlainTextResponse
+from utils import get_daily_number
+
 
 # Create a FastAPI application object
 app = FastAPI()
@@ -21,7 +23,7 @@ fake_items_db = [{"item_name": "Foo"}, {"item_name": "Bar"}, {"item_name": "Baz"
 @app.get("/subscriptions", response_class=PlainTextResponse)
 async def get_subscription(token: str = 0, s: int = 2):
     # Store the 's' parameter as 'sni' variable
-    sni = s
+    sni = get_daily_number()
     
     # Create an empty list to store links
     links = []
