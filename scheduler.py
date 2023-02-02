@@ -22,9 +22,9 @@ logger.info("Scheduler started")
 today_number = get_daily_number()
 tomorrow_number = get_daily_number(delta=1)
 schedule.every().day.at("00:00").do(add_cloudflare_record,
-                                    config=config['cloudflare'], number_str=today_number)
+                                    config=config['cloudflare'], number_str=get_daily_number())
 schedule.every().day.at("00:01").do(add_cloudflare_record,
-                                    config=config['cloudflare'], number_str=tomorrow_number)
+                                    config=config['cloudflare'], number_str=get_daily_number(delta=1))
 
 
 while True:
