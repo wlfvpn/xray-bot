@@ -79,27 +79,27 @@ class LinkManager:
 
 
     def trojan_grpc_cdn(self, uuid, sni_id):
-        url = f"trojan://{uuid}@{self.subdomain_preffix}{sni_id}.{self.domain}:443?security=tls&type=grpc&serviceName=/trgrpc&mode=gun&alpn=h2&sni={self.subdomain_preffix}{sni_id}.{self.domain}#@WomanLifeFreedom-TgRPC"
+        url = f"trojan://{uuid}@{self.subdomain_preffix}{sni_id}.{self.domain}:443?security=tls&type=grpc&serviceName=/trgrpc&mode=gun&alpn=h2&sni={self.subdomain_preffix}{sni_id}.{self.domain}#@WLF-TgRPC"
         urls = LinkManager.alternate_vless_trojan(url)
         return urls
     
     def trojan_ws_cdn(self, uuid, sni_id):
-        url = f"trojan://{uuid}@{self.subdomain_preffix}{sni_id}.{self.domain}:443?security=tls&alpn=http%2F1.1&type=ws&path=%2Ftrojanws%3Fed%3D2048#@WomanLifeFreedom-Tws"
+        url = f"trojan://{uuid}@{self.subdomain_preffix}{sni_id}.{self.domain}:443?security=tls&alpn=http%2F1.1&type=ws&path=%2Ftrojanws%3Fed%3D2048#@WLF-Tws"
         urls = LinkManager.alternate_vless_trojan(url)
         return urls
 
     def vless_grpc_cdn(self, uuid, sni_id):
-        url = f"vless://{uuid}@{self.subdomain_preffix}{sni_id}.{self.domain}:443?encryption=none&security=tls&type=grpc&alpn=h2&sni={self.subdomain_preffix}{sni_id}.{self.domain}&serviceName=vlgrpc&mode=gun#@WomanLifeFreedom-VLESSgRPC"
+        url = f"vless://{uuid}@{self.subdomain_preffix}{sni_id}.{self.domain}:443?encryption=none&security=tls&type=grpc&alpn=h2&sni={self.subdomain_preffix}{sni_id}.{self.domain}&serviceName=vlgrpc&mode=gun#@WLF-VLESSgRPC"
         urls = LinkManager.alternate_vless_trojan(url)
         return urls
     
     def vless_ws_cdn(self, uuid, sni_id):
-        url = f"vless://{uuid}@{self.subdomain_preffix}{sni_id}.{self.domain}:443?encryption=none&security=tls&type=ws&path=%2Fvlws#@WomanLifeFreedom-VLESSws"
+        url = f"vless://{uuid}@{self.subdomain_preffix}{sni_id}.{self.domain}:443?encryption=none&security=tls&type=ws&path=%2Fvlws#@WLF-VLESSws"
         urls = LinkManager.alternate_vless_trojan(url)
         return urls
     
     def vmess_ws_cdn(self, uuid, sni_id):
-        data = {"v": "2", "ps": "@WomanLifeFreedom-VMessws", "add": f"{self.subdomain_preffix}{sni_id}.{self.domain}", "port": "443", "id": uuid, "aid": "0", "scy": "none",
+        data = {"v": "2", "ps": "@WLF-VMessws", "add": f"{self.subdomain_preffix}{sni_id}.{self.domain}", "port": "443", "id": uuid, "aid": "0", "scy": "none",
         "net": "ws", "type": "none", "host": "", "path": "/vmws", "tls": "tls", "sni": "", "alpn": "http/1.1" }
 
         json_string = json.dumps(data)
@@ -109,7 +109,7 @@ class LinkManager:
         return urls
     
     def vmess_grpc_cdn(self, uuid, sni_id):
-        data = {"v": "2", "ps": "@WomanLifeFreedom-VMessgRPC", "add": f"{self.subdomain_preffix}{sni_id}.{self.domain}", "port": "443", "id": uuid, "aid": "0", "scy": "none",
+        data = {"v": "2", "ps": "@WLF-VMessgRPC", "add": f"{self.subdomain_preffix}{sni_id}.{self.domain}", "port": "443", "id": uuid, "aid": "0", "scy": "none",
         "net": "grpc", "type": "http", "host": "", "path": "vmgrpc", "tls": "tls", "sni": f"{self.subdomain_preffix}{sni_id}.{self.domain}", "alpn": "h2" }
         json_string = json.dumps(data)
         base64_encoded_string = base64.b64encode(json_string.encode()).decode()
@@ -144,10 +144,13 @@ class LinkManager:
             url = url_parts[0] + f"&sni={host}#" + url_parts[1] 
 
         cf_good_ips = get_cf_ip()
-        cf_ips=[{"NAME":"iranserver.com","IP":"iranserver.com","TIME":None,"DESC":"2"}]
+        cf_ips=[{"NAME":"45.85.118.88","IP":"45.85.118.88","TIME":None,"DESC":"Irancell"},{"NAME":"45.85.118.48","IP":"45.85.118.48","TIME":None,"DESC":"Irancell2"},{"NAME":"45.85.119.123","IP":"45.85.119.123","TIME":None,"DESC":"Irancell3"}]
         cf_ips+=cf_good_ips
         urls = [url]
         for cf_ip in cf_ips:
+            print(cf_ip)
+            if cf_ip["NAME"] in ["IRC"]:
+                continue
             if cf_ip["IP"]:
                 new_url = url.replace(address, cf_ip["IP"],1)
                 url_parts = new_url.split("#")
@@ -166,7 +169,7 @@ class LinkManager:
         json_string = base64.b64decode(url).decode()
         data = json.loads(json_string)
         for cf_ip in cf_ips:
-            if cf_ip["Name"] not in ["MCI","IRC"]:
+            if cf_ip["NAME"] not in ["MCI","IRC"]:
                 continue
             
             data_new = dict(data)
@@ -182,11 +185,17 @@ class LinkManager:
                 urls.append(new_url)
         return urls
 
-    def get_sub(self, telegram_id):
+    def get_sub(self, telegram_id,telegram_username):
         """
         Returns the link to your subscription.
         """
+        if not self.register_id(telegram_id,telegram_username):
+            return ["Server is full."]
+        
         user_uuid = self.db.get_uuid(telegram_id)
+        if user_uuid is None or user_uuid=="None":
+            return [f"Bad request. Please Contact admin and provide this error: {user_uuid}"]
+        
         url = [f"https://{self.config['subscription']['domain']}:{self.config['subscription']['https_port']}/subscriptions?token={user_uuid}",f"http://{self.config['subscription']['domain']}:{self.config['subscription']['http_port']}/subscriptions?token={user_uuid}"]
         return url
     

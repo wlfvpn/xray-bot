@@ -40,10 +40,10 @@ def get_cf_ip():
         if parts[0] not in net.keys():
             continue
         if len(parts) >= 3:
-            data_dict = {'Name': parts[0], 'IP': parts[1],
+            data_dict = {'NAME': parts[0], 'IP': parts[1],
                          'Time': parts[2], "DESC": net[parts[0]]}
         else:
-            data_dict = {'Name': parts[0],
+            data_dict = {'NAME': parts[0],
                          'IP': None, 'Time': None, "DESC": None}
         data_list.append(data_dict)
     return data_list
@@ -61,7 +61,11 @@ async def get_outline_key(user_id):
     config = load_config('config.yaml')
     import requests
     url = f"http://{config['outline_ip']}/get_outline_key?user_id={user_id}"
-    response = requests.get(url)
+    try:
+        response = requests.get(url, timeout = 15)
+    except:
+        return 408, ""
+
     return response.status_code, str(response.content).split('"')[1]
 
 
@@ -142,3 +146,12 @@ if __name__ == "__main__":
     today = get_daily_number(0)
     add_cloudflare_record(config['cloudflare'], today)
     add_cloudflare_record(config['cloudflare'], tomorrow)
+
+
+def is_valid_uuid(val):
+    import uuid
+    try:
+        uuid.UUID(str(val))
+        return True
+    except ValueError:
+        return False

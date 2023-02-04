@@ -101,6 +101,24 @@ class SQLiteDB:
             return result[0]
         else:
             return None
+        
+    def get_username(self, uuid):
+        """
+        Retrieves the telegram_username of a user based on the provided uuid.
+
+        Args:
+            uuid (str): The uuid of the user.
+
+        Returns:
+            str: The telegram username of the user, or None if no user was found with the provided Telegram ID.
+        """
+        c = self.conn.cursor()
+        c.execute("SELECT telegram_username FROM users WHERE uuid=?", (uuid,))
+        result = c.fetchone()
+        if result:
+            return result[0]
+        else:
+            return None
 
 
 if __name__=="__main__":

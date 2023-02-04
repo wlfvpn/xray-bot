@@ -85,9 +85,6 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     if maintenance:
         return
 
-    if not await is_member(update, context):
-        return
-
     keyboard = [[InlineKeyboardButton("VMess", callback_data="gen_vmess"), InlineKeyboardButton("VLESS", callback_data="gen_vless"), InlineKeyboardButton("Trojan", callback_data="gen_trojan")],
                 [InlineKeyboardButton(
                     "Subscription Link", callback_data="get_sub")],
@@ -111,16 +108,29 @@ async def gen_report(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 
 async def get_sub(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    if not await is_member(update, context):
+        return
+    maintenance = await is_maintenance(update, context)
+    if maintenance:
+        return
+
+    
     logging.info(
         f'Subscription, Gave sub to @{update.effective_user.username}')
     await context.bot.send_message(chat_id=update.effective_chat.id, text="لینک سابسکریپشن اگه اولی نشد دومی رو بزنید. هر دو یکین نیاز نیست هر دو رو بزنید.")
-    link = '`'+link_manager.get_sub(str(update.effective_user.id))[0]+'`'
+    link = '`'+link_manager.get_sub(str(update.effective_user.id),str(update.effective_user.username))[0]+'`'
     await context.bot.send_message(chat_id=update.effective_chat.id, text=link, parse_mode="MarkdownV2")
-    link = '`'+link_manager.get_sub(str(update.effective_user.id))[1]+'`'
+    link = '`'+link_manager.get_sub(str(update.effective_user.id),str(update.effective_user.username))[1]+'`'
     await context.bot.send_message(chat_id=update.effective_chat.id, text=link, parse_mode="MarkdownV2")
 
 
 async def gen_outline(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    if not await is_member(update, context):
+        return
+    maintenance = await is_maintenance(update, context)
+    if maintenance:
+        return
+    
     await context.bot.send_message(chat_id=update.effective_chat.id, text="درحال برقراری ارتباط با سرور. لطفا چند دقیقه صبر کنید...")
     email = str(update.effective_user.id)+"@telegram.com"
     logging.info(f'OUTLINE, Gave link to @{update.effective_user.username}')
@@ -132,8 +142,11 @@ async def gen_outline(update: Update, context: ContextTypes.DEFAULT_TYPE):
         await context.bot.send_message(chat_id=update.effective_chat.id, text="حجم 4 گیگابایت. انقضا یک هفته.")
         await context.bot.send_message(chat_id=update.effective_chat.id, text="برای اطلاعات بیشتر به  https://instagram.com/getoutlinevpnkey  مراجعه کنید.")
 
-    if status == 226:
+    elif status == 226:
         await context.bot.send_message(chat_id=update.effective_chat.id, text="شما قبلا درخواست داده اید. لطفا یک هفته از درخواست قبلی صبر کنید.")
+    
+    elif status == 408:
+        await context.bot.send_message(chat_id=update.effective_chat.id, text="ارتباط با سرور اوتلاین برقرار نشد. احتمالا سرور در حال تعمییر میباشد. برای اطلاعات بیشتر به https://instagram.com/getoutlinevpnkey مراجه کنید.")
 
 
 async def button(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:

@@ -3,8 +3,8 @@ from link_manager import LinkManager
 from utils import load_config
 import base64
 from fastapi.responses import PlainTextResponse
-from utils import get_daily_number
-
+from utils import get_daily_number, is_valid_uuid
+import random
 
 # Create a FastAPI application object
 app = FastAPI()
@@ -22,6 +22,8 @@ fake_items_db = [{"item_name": "Foo"}, {"item_name": "Bar"}, {"item_name": "Baz"
 # Define the API endpoint to retrieve subscription links
 @app.get("/subscriptions", response_class=PlainTextResponse)
 async def get_subscription(token: str = 0, s: int = 2):
+    if not is_valid_uuid(token):
+        return random.choice(["Dahanet service! :))", "Ey baba! Ajab giri kardima", "Khodaei chetor root mishe inkaro koni!", " Dada hichi in posht nist! talash nakn alaki!"])
     # Store the 's' parameter as 'sni' variable
     sni = get_daily_number()
     
