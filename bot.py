@@ -173,18 +173,21 @@ async def button(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
 
 
 async def is_member(update: Update, context: ContextTypes.DEFAULT_TYPE, send_thank_you=True):
-    channel_id = '@WomanLifeFreedomVPN'  # The first argument is the channel ID
-    # update.message.from_user.id  # Get the client's user ID
-    user_id = update.effective_user.id
-    chat_member = await context.bot.get_chat_member(chat_id=channel_id, user_id=user_id)
-    if chat_member.status in ["member", "creator"]:
-        if send_thank_you:
-            await context.bot.send_message(chat_id=update.effective_chat.id, text="Thank you for subscribing to our channel!")
-    else:
-        await context.bot.send_message(chat_id=update.effective_chat.id, text=f"Please subscribe to our channel {channel_id}.")
-        await context.bot.send_message(chat_id=update.effective_chat.id, text="لطفا ابتدا عضو کانال شوید. این وی پی ان محدود به اعضای کانال می باشد.")
-    return chat_member.status in ["member", "creator"]
-
+    config = load_config(config_path)
+    # Check if the client is a member of the specified channel
+    user_id = update.effective_user.id # update.message.from_user.id  # Get the client's user ID
+    try:
+        chat_member = await context.bot.get_chat_member(chat_id=config["telegram_channel_id"], user_id=user_id)
+        if chat_member.status in ["member", "creator"]:
+            if send_thank_you:
+                await context.bot.send_message(chat_id=update.effective_chat.id, text="Thank you for subscribing to our channel!")
+        else:
+            await context.bot.send_message(chat_id=update.effective_chat.id, text=f"Please subscribe to our channel {config['telegram_channel_id']}.")
+            await context.bot.send_message(chat_id=update.effective_chat.id, text="لطفا ابتدا عضو کانال شوید. این وی پی ان محدود به اعضای کانال می باشد.")
+        return chat_member.status in ["member", "creator"]
+    except:
+        logger.error(f"Error in checking the members of the channel. Please make sure robot is admin to your channel {config['telegram_channel_id']}")
+        return False
 
 def main() -> None:
     # Parse the config file path from the command line arguments

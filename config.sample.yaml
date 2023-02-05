@@ -5,6 +5,8 @@ db_path: "db/database.db"
 max_users: 3000
 traffic_limit: 15516192768 #14 GB
 outline_ip: "101.125.27.39"
+telegram_channel_id: "@WomanLifeFreedomVPN"
+
 cloudflare:
   auth_key: "4b622221384a372e2c23f5e323a6e25"
   zone_id: "d0d07812312467c16821370123182827c"
