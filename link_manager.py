@@ -148,7 +148,6 @@ class LinkManager:
         cf_ips+=cf_good_ips
         urls = [url]
         for cf_ip in cf_ips:
-            print(cf_ip)
             if cf_ip["NAME"] in ["IRC"]:
                 continue
             if cf_ip["IP"]:
@@ -199,3 +198,6 @@ class LinkManager:
         url = [f"https://{self.config['subscription']['domain']}:{self.config['subscription']['https_port']}/subscriptions?token={user_uuid}",f"http://{self.config['subscription']['domain']}:{self.config['subscription']['http_port']}/subscriptions?token={user_uuid}"]
         return url
     
+    def get_usage(self,telegram_id):
+        usage = self.db.get_usage(telegram_id)
+        return f"Used {round(usage/1024**3,2)}/{round(self.config['traffic_limit']/1024**3,2)} GB"

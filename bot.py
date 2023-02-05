@@ -104,8 +104,8 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
 
 
 async def gen_report(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    await context.bot.send_message(chat_id=update.effective_chat.id, text="هنوز این دکمه پیاده سازی نشده است.",)
-
+    usage = link_manager.get_usage(update.effective_user.id)
+    await context.bot.send_message(chat_id=update.effective_chat.id, text=usage)
 
 async def get_sub(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if not await is_member(update, context):

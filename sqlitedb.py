@@ -113,14 +113,52 @@ class SQLiteDB:
             str: The telegram username of the user, or None if no user was found with the provided Telegram ID.
         """
         c = self.conn.cursor()
-        c.execute("SELECT telegram_username FROM users WHERE uuid=?", (uuid,))
+        c.execute("SELECT telegram_id, telegram_username FROM users WHERE uuid=?", (uuid,))
+        result = c.fetchone()
+        if result:
+            return result
+        else:
+            return None,None
+        
+    def get_usage(self, telegram_id):
+        """
+        Retrieves the usage of a user based on the provided telegram_id.
+
+        Args:
+            telegram_id (str): The telegram_id of the user.
+
+        Returns:
+            int: The usage of the user, or None if no user was found with the provided Telegram ID.
+        """
+        c = self.conn.cursor()
+        c.execute("SELECT usage FROM users WHERE telegram_id=?", (telegram_id,))
         result = c.fetchone()
         if result:
             return result[0]
         else:
             return None
 
-
+    def add_usage(self, uuid, amount):
+        c = self.conn.cursor()
+        with self.conn:
+            c.execute("UPDATE users SET usage = usage + ? WHERE uuid = ?", (amount, uuid))
+               
+    def get_uuid_by_usage(self, traffic_limit):
+        c = self.conn.cursor()
+        c.execute("SELECT uuid FROM users WHERE usage > ?", (traffic_limit,))
+        result = c.fetchall()
+        return result
+    def get_all_uuid(self):
+        c = self.conn.cursor()
+        c.execute("SELECT uuid FROM users")
+        result = c.fetchall()
+        return result
+    
+    def reset_usage(self):
+        c = self.conn.cursor()
+        with self.conn:
+            c.execute("UPDATE users SET usage = 0")
+    
 if __name__=="__main__":
     table = SQLiteDB('database_test.db')
     for i in range(10):

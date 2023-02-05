@@ -147,7 +147,7 @@
         ]
       }
     },
-    {
+    { "tag": "vless-ws",
       "listen": "@vless-ws",
       "protocol": "vless",
       "settings": {
@@ -176,7 +176,7 @@
         ]
       }
     },
-    {
+    { "tag": "wmess-ws",
       "listen": "@vmess-ws",
       "protocol": "vmess",
       "settings": {
@@ -204,7 +204,7 @@
         ]
       }
     },
-    {
+    { "tag": "trojan-ws",
       "listen": "@trojan-ws",
       "protocol": "trojan",
       "settings": {
@@ -256,7 +256,7 @@
         ]
       }
     },
-    {
+    { "tag": "trojan-tcp",
       "listen": "@trojan-tcp",
       "protocol": "trojan",
       "settings": {
@@ -324,7 +324,7 @@
         ]
       }
     },
-    {
+    { "tag":"vmess-tcp",
       "listen": "@vmess-tcp",
       "protocol": "vmess",
       "settings": {
@@ -493,7 +493,7 @@
         ]
       }
     },
-    {
+    { "tag": "trojan-h2", 
       "listen": "@trojan-h2",
       "protocol": "trojan",
       "settings": {
@@ -511,7 +511,7 @@
         }
       }
     },
-    {
+    { "tag":"vless-h2",
       "listen": "@vless-h2",
       "protocol": "vless",
       "settings": {
@@ -538,7 +538,7 @@
         ]
       }
     },
-    {
+    { "tag":"vmess-h2",
       "listen": "@vmess-h2",
       "protocol": "vmess",
       "settings": {
