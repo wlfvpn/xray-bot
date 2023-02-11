@@ -144,12 +144,12 @@ class LinkManager:
             url = url_parts[0] + f"&sni={host}#" + url_parts[1] 
 
         cf_good_ips = get_cf_ip()
-        cf_ips=[{"NAME":"45.85.118.88","IP":"45.85.118.88","TIME":None,"DESC":"Irancell"},{"NAME":"45.85.118.48","IP":"45.85.118.48","TIME":None,"DESC":"Irancell2"},{"NAME":"45.85.119.123","IP":"45.85.119.123","TIME":None,"DESC":"Irancell3"}]
+        cf_ips=[{"NAME":"45.85.118.88","IP":"45.85.118.88","TIME":None,"DESC":"Irancell"},{"NAME":"45.85.118.48","IP":"45.85.118.48","TIME":None,"DESC":"Irancell2"},{"NAME":"108.162.195.51","IP":"108.162.195.51","TIME":None,"DESC":"Irancell3"}]
         cf_ips+=cf_good_ips
         urls = [url]
         for cf_ip in cf_ips:
-            if cf_ip["NAME"] in ["IRC"]:
-                continue
+        #    if cf_ip["NAME"] in ["IRC"]:
+        #        continue
             if cf_ip["IP"]:
                 new_url = url.replace(address, cf_ip["IP"],1)
                 url_parts = new_url.split("#")

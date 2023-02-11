@@ -24,21 +24,25 @@ def next_monday():
     delta = next_monday - today
     return delta.total_seconds()
 
+def update_cf(cf_config):
+    add_cloudflare_record(config=cf_config, number_str=get_daily_number(delta=0))   
+    add_cloudflare_record(config=cf_config, number_str=get_daily_number(delta=1))
+
 config = load_config('config.yaml')
 logger.info("Scheduler started")
 today_number = get_daily_number()
 tomorrow_number = get_daily_number(delta=1)
 traffic_manager = TrafficManager(config)
-schedule.every().day.at("00:00").do(add_cloudflare_record,
-                                    config=config['cloudflare'], number_str=get_daily_number())
-schedule.every().day.at("00:01").do(add_cloudflare_record,
-                                    config=config['cloudflare'], number_str=get_daily_number(delta=1))
+schedule.every().day.at("00:00").do(update_cf, cf_config=config['cloudflare'])
 
 schedule.every(5).minutes.do(traffic_manager.run)
 schedule.every().monday.at("00:00").do(traffic_manager.reset_traffic)
  
 for job in schedule.jobs:
     logger.info(" - " + str(job))
+
+update_cf(config['cloudflare'])
+
 while True:
     schedule.run_pending()
     time.sleep(1)
