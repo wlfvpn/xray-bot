@@ -17,7 +17,7 @@ tags = ['vless-grpc', '@vless-ws','vmess-grpc','@vmess-ws','@trojan-ws','trojan-
 quantity = 10000
 db_path = f'{repo_folder}/db/database.db'
 config_path = f"{repo_folder}/db/config.json"
-domain = 'cdir-*.wlfvip.com'
+domain = 'cdir-*.wlfvip.shop'
 port = 443
 ##############################################################################
 

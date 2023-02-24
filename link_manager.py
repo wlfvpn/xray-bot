@@ -79,7 +79,7 @@ class LinkManager:
 
 
     def trojan_grpc_cdn(self, uuid, sni_id):
-        url = f"trojan://{uuid}@{self.subdomain_preffix}{sni_id}.{self.domain}:443?security=tls&type=grpc&serviceName=/trgrpc&mode=gun&alpn=h2&sni={self.subdomain_preffix}{sni_id}.{self.domain}#@WLF-TgRPC"
+        url = f"trojan://{uuid}@{self.subdomain_preffix}{sni_id}.{self.domain}:443?security=tls&type=grpc&serviceName=trgrpc&mode=gun&alpn=h2&sni={self.subdomain_preffix}{sni_id}.{self.domain}#@WLF-TgRPC"
         urls = LinkManager.alternate_vless_trojan(url)
         return urls
     
@@ -94,7 +94,7 @@ class LinkManager:
         return urls
     
     def vless_ws_cdn(self, uuid, sni_id):
-        url = f"vless://{uuid}@{self.subdomain_preffix}{sni_id}.{self.domain}:443?encryption=none&security=tls&type=ws&path=%2Fvlws#@WLF-VLESSws"
+        url = f"vless://{uuid}@{self.subdomain_preffix}{sni_id}.{self.domain}:443?encryption=none&alpn=http%2F1.1&security=tls&type=ws&path=%2Fvlws#@WLF-VLESSws"
         urls = LinkManager.alternate_vless_trojan(url)
         return urls
     
@@ -144,7 +144,7 @@ class LinkManager:
             url = url_parts[0] + f"&sni={host}#" + url_parts[1] 
 
         cf_good_ips = get_cf_ip()
-        cf_ips=[{"NAME":"45.85.118.88","IP":"45.85.118.88","TIME":None,"DESC":"Irancell"},{"NAME":"45.85.118.48","IP":"45.85.118.48","TIME":None,"DESC":"Irancell2"},{"NAME":"108.162.195.51","IP":"108.162.195.51","TIME":None,"DESC":"Irancell3"}]
+        cf_ips=[{"NAME":"45.85.118.88","IP":"45.85.118.88","TIME":None,"DESC":"Irancell"},{"NAME":"45.85.118.48","IP":"45.85.118.48","TIME":None,"DESC":"Irancell2"},{"NAME":"104.16.219.215","IP":"104.16.219.215","TIME":None,"DESC":"Irancell3"}]
         cf_ips+=cf_good_ips
         urls = [url]
         for cf_ip in cf_ips:
@@ -189,11 +189,11 @@ class LinkManager:
         Returns the link to your subscription.
         """
         if not self.register_id(telegram_id,telegram_username):
-            return ["Server is full."]
+            return ["Server is full.","Server is full."]
         
         user_uuid = self.db.get_uuid(telegram_id)
         if user_uuid is None or user_uuid=="None":
-            return [f"Bad request. Please Contact admin and provide this error: {user_uuid}"]
+            return [f"Bad request. Please Contact admin and provide this error: {user_uuid}",f"Bad request. Please Contact admin and provide this error: {user_uuid}"]
         
         url = [f"https://{self.config['subscription']['domain']}:{self.config['subscription']['https_port']}/subscriptions?token={user_uuid}",f"http://{self.config['subscription']['domain']}:{self.config['subscription']['http_port']}/subscriptions?token={user_uuid}"]
         return url

@@ -136,7 +136,7 @@ class SQLiteDB:
         if result:
             return result[0]
         else:
-            return None
+            return 0
 
     def add_usage(self, uuid, amount):
         c = self.conn.cursor()

@@ -36,7 +36,7 @@ async def gen_link(update: Update, context: ContextTypes.DEFAULT_TYPE, type):
         return
 
     if not update.effective_user.username:
-        await context.bot.send_message(chat_id=update.effective_chat.id, text="Please setup a username for your telegram account.")
+        await context.bot.send_message(chat_id=update.effective_chat.id, text="Please set a username for your telegram account.")
         return
 
     if not await is_member(update, context, send_thank_you=False):
@@ -108,12 +108,16 @@ async def gen_report(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await context.bot.send_message(chat_id=update.effective_chat.id, text=usage)
 
 async def get_sub(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    if not await is_member(update, context):
-        return
     maintenance = await is_maintenance(update, context)
     if maintenance:
         return
-
+    
+    if not await is_member(update, context):
+        return
+    
+    if not update.effective_user.username:
+        await context.bot.send_message(chat_id=update.effective_chat.id, text="Please set a username for your telegram account.")
+        return
     
     logging.info(
         f'Subscription, Gave sub to @{update.effective_user.username}')
@@ -132,7 +136,7 @@ async def gen_outline(update: Update, context: ContextTypes.DEFAULT_TYPE):
         return
     
     await context.bot.send_message(chat_id=update.effective_chat.id, text="درحال برقراری ارتباط با سرور. لطفا چند دقیقه صبر کنید...")
-    email = str(update.effective_user.id)+"@telegram.com"
+    email = str(update.effective_user.id)+"@telegram.ca"
     logging.info(f'OUTLINE, Gave link to @{update.effective_user.username}')
 
     status, url = await get_outline_key(email)
@@ -146,7 +150,7 @@ async def gen_outline(update: Update, context: ContextTypes.DEFAULT_TYPE):
         await context.bot.send_message(chat_id=update.effective_chat.id, text="شما قبلا درخواست داده اید. لطفا یک هفته از درخواست قبلی صبر کنید.")
     
     elif status == 408:
-        await context.bot.send_message(chat_id=update.effective_chat.id, text="ارتباط با سرور اوتلاین برقرار نشد. احتمالا سرور در حال تعمییر میباشد. برای اطلاعات بیشتر به https://instagram.com/getoutlinevpnkey مراجه کنید.")
+        await context.bot.send_message(chat_id=update.effective_chat.id, text="ارتباط با سرور اوتلاین برقرار نشد. احتمالا سرور در حال تعمیر میباشد. برای اطلاعات بیشتر به https://instagram.com/getoutlinevpnkey مراجه کنید.")
 
 
 async def button(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
