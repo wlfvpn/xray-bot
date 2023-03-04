@@ -13,8 +13,8 @@ from sqlitedb import SQLiteDB
 This scripts generates a 10000 uuid connections for tags.
 """
 #############################################################################
-tags = ['vless-grpc', '@vless-ws','vmess-grpc','@vmess-ws','@trojan-ws','trojan-grpc']
-quantity = 10000
+tags = ['vless-grpc', '@vless-ws','@vmess-ws','@trojan-ws','trojan-grpc'] #,'vmess-grpc'
+quantity = 7000
 db_path = f'{repo_folder}/db/database.db'
 config_path = f"{repo_folder}/db/config.json"
 domain = 'cdir-*.wlfvip.shop'

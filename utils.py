@@ -19,8 +19,7 @@ def load_config(path='config.yaml'):
         config = yaml.safe_load(stream)
     return config
 
-
-def get_cf_ip():
+def get_cf_ip(url = "http://bot.sudoer.net/best.cf.iran"):
     """Get the list of nonblocked cloudflare internet service providers in Iran.
 
     Returns:
@@ -29,9 +28,12 @@ def get_cf_ip():
     from collections import defaultdict
     import requests
 
-    url = "http://bot.sudoer.net/best.cf.iran"
-    response = requests.get(url)
-    data = response.text.strip().split('\n')
+    data = []
+    try:
+        response = requests.get(url,timeout=1)
+        data = response.text.strip().split('\n')
+    except:
+        pass
     net = defaultdict(str, {"MCI": "HamrahAval", "RTL": "Rightel", "AST": "Asiatek", "IRC": "Irancel",
                       "SHT": "Shatel", "MKB": "Mokhaberat", "MBT": "Mobinnet", "ZTL": "Zitel", "PRS": "ParsOnline"})
     data_list = []
