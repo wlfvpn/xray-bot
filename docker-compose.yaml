@@ -5,7 +5,6 @@ services:
     container_name: xray-bot
     volumes:
       - $PWD/db/:/etc/xray
-      - $PWD/db/cert:/root/cert
       - /dev/shm/:/dev/shm/
     restart: always
     network_mode: host

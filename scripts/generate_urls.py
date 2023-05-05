@@ -13,7 +13,7 @@ from sqlitedb import SQLiteDB
 This scripts generates a 10000 uuid connections for tags.
 """
 #############################################################################
-tags = ['vless-grpc', '@vless-ws','@vmess-ws','@trojan-ws','trojan-grpc'] #,'vmess-grpc'
+tags = ['Vless-XTLS-reality'] #,'vmess-grpc'
 quantity = 7000
 db_path = f'{repo_folder}/db/database.db'
 config_path = f"{repo_folder}/db/config.json"
@@ -29,7 +29,7 @@ db = SQLiteDB(db_path)
 
 for i in tqdm(range(quantity)):
     random_uuid = str(uuid.uuid4())
-    client = {'email':f'{random_uuid}', 'id':  f'{random_uuid}' ,'password': f'{random_uuid}','level': 0}
+    client = {'email':f'{random_uuid}', 'id':  f'{random_uuid}' ,'password': f'{random_uuid}',"flow": "xtls-rprx-vision", 'level': 0}
     added = False
     for inbound in data['inbounds']:
         if 'listen' in inbound.keys() and inbound['listen'] in tags or 'tag' in inbound.keys() and inbound['tag'] in tags:

@@ -24,9 +24,9 @@ logger = logging.getLogger(__name__)
 
 async def instructions(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await context.bot.send_message(chat_id=update.effective_chat.id, text="""Download the applications below and import the generated link.
-                                                                          <b>Android:</b> Matsuri, V2rayNG
-                                                                          <b>IOS:</b> NapsternetV, shadowrocket
-                                                                          <b>Windows:</b> Neokoray, v2rayN
+                                                                          <b>Android:</b> V2rayNG
+                                                                          <b>IOS:</b> wingsX
+                                                                          <b>Windows:</b> v2rayN
                                                                           <b>MacOS:</b> V2RayXS """, parse_mode="HTML")
 
 
@@ -42,25 +42,15 @@ async def gen_link(update: Update, context: ContextTypes.DEFAULT_TYPE, type):
     if not await is_member(update, context, send_thank_you=False):
         return
 
-    # lock = asyncio.Lock()
-    # async with lock:
-    if type == 'trojan':
-        ret, urls = link_manager.get_link_trojan(
+    if type == 'reality':
+        ret, urls = link_manager.get_link_reality(
             str(update.effective_user.id), str(update.effective_user.username))
-        logger.info(f'Trojan, Gave link to @{update.effective_user.username}')
+        logger.info(f'REALITY, Gave link to @{update.effective_user.username}')
 
-    if type == 'vless':
-        ret, urls = link_manager.get_link_vless(
-            str(update.effective_user.id), str(update.effective_user.username))
-        logger.info(f'VLESS, Gave link to @{update.effective_user.username}')
-
-    if type == 'vmess':
-        ret, urls = link_manager.get_link_vmess(
-            str(update.effective_user.id), str(update.effective_user.username))
-        logger.info(f'VMESS, Gave link to @{update.effective_user.username}')
     if ret:
         for (link_type, url) in urls.items():
             if url:
+                print(url)
                 await context.bot.send_message(chat_id=update.effective_chat.id, text=link_type)
 
                 text = "`" + '\n'.join(url) + "`"
@@ -85,9 +75,7 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     if maintenance:
         return
 
-    keyboard = [[InlineKeyboardButton("VMess", callback_data="gen_vmess"), InlineKeyboardButton("VLESS", callback_data="gen_vless"), InlineKeyboardButton("Trojan", callback_data="gen_trojan")],
-                [InlineKeyboardButton(
-                    "Subscription Link", callback_data="get_sub")],
+    keyboard = [[ InlineKeyboardButton("REALITY", callback_data="gen_reality")],
                 [InlineKeyboardButton("گزارش استفاده", callback_data="usage")],
                 [InlineKeyboardButton(
                     "Outline VPN گرفتن لینک", callback_data="gen_outline")],
@@ -166,6 +154,8 @@ async def button(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
         await gen_link(update, context, 'trojan')
     elif query.data == "gen_vless":
         await gen_link(update, context, 'vless')
+    elif query.data == "gen_reality":
+        await gen_link(update, context, 'reality')
     elif query.data == "gen_vmess":
         await gen_link(update, context, 'vmess')
     elif query.data == "get_sub":

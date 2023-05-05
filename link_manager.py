@@ -47,6 +47,19 @@ class LinkManager:
         urls['Trojan-WS'] = self.trojan_ws_cdn(user_uuid, sni_id)
         urls['Trojan-gRPC'] = self.trojan_grpc_cdn(user_uuid, sni_id)
         return True, urls
+    
+    def get_link_reality(self,telegram_id,telegram_username):
+        if not self.register_id(telegram_id, telegram_username):
+            return False, ["Server is full."]
+
+        user_uuid = self.db.get_uuid(telegram_id)
+        if user_uuid is None:
+            return False, ["Error connetion to server database."]
+        
+        urls = {}
+        sni_id = 0
+        urls['VLESS-REALITY'] = [self.vless_xtls_reality(user_uuid, sni_id)]
+        return True, urls
 
     def get_link_vless(self, telegram_id, telegram_username):
         if not self.register_id(telegram_id, telegram_username):
@@ -92,6 +105,7 @@ class LinkManager:
 
     def vless_grpc_cdn(self, uuid, sni_id):
         url = f"vless://{uuid}@{self.subdomain_preffix}{sni_id}.{self.domain}:443?encryption=none&security=tls&type=grpc&alpn=h2&sni={self.subdomain_preffix}{sni_id}.{self.domain}&serviceName=vlgrpc&mode=gun#@WLF-VLESSgRPC"
+
         urls = LinkManager.alternate_vless_trojan(url)
         return urls
 
@@ -99,6 +113,13 @@ class LinkManager:
         url = f"vless://{uuid}@{self.subdomain_preffix}{sni_id}.{self.domain}:443?encryption=none&alpn=http%2F1.1&security=tls&type=ws&path=%2Fvlws%3Fed%3D2048#@WLF-VLESSws"
         urls = LinkManager.alternate_vless_trojan(url)
         return urls
+    
+    def vless_xtls_reality(self, uuid, sni_id):
+        import random
+        import string
+        spx = ''.join(random.choices(string.ascii_lowercase, k=7))+'/'+''.join(random.choices(string.ascii_lowercase, k=5))
+        url = f"vless://{uuid}@{self.domain}:443?encryption=none&flow=xtls-rprx-vision&security=reality&sni=www.yahoo.com&fp=chrome&pbk=GAUjNf1wQnDm5ziCGqRmb3yVfU9bg_UPwZ2_QU4JWRU&sid=6bb85179e30d4fc2&spx=%2F{spx}&type=tcp&headerType=none#@WomanLifeFreedomVPN"
+        return url
 
     def vmess_ws_cdn(self, uuid, sni_id):
         data = {"v": "2", "ps": "@WLF-VMessws", "add": f"{self.subdomain_preffix}{sni_id}.{self.domain}", "port": "443", "id": uuid, "aid": "0", "scy": "none",

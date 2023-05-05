@@ -33,15 +33,16 @@ logger.info("Scheduler started")
 today_number = get_daily_number()
 tomorrow_number = get_daily_number(delta=1)
 traffic_manager = TrafficManager(config)
-schedule.every().day.at("00:00").do(update_cf, cf_config=config['cloudflare'])
+# schedule.every().day.at("00:00").do(update_cf, cf_config=config['cloudflare'])
 
-schedule.every(5).minutes.do(traffic_manager.run)
+schedule.every(1).minutes.do(traffic_manager.run)
 schedule.every().monday.at("00:00").do(traffic_manager.reset_traffic)
  
 for job in schedule.jobs:
     logger.info(" - " + str(job))
 
-update_cf(config['cloudflare'])
+traffic_manager.run()
+# update_cf(config['cloudflare'])
 
 while True:
     schedule.run_pending()
