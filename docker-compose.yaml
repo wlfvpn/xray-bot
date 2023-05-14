@@ -1,10 +1,25 @@
 version: '3.9'
 services:
-  xray-core:
+  core:
     image: teddysun/xray
-    container_name: xray-bot
     volumes:
       - $PWD/db/:/etc/xray
       - /dev/shm/:/dev/shm/
+    restart: always
+    network_mode: host
+  
+  scheduler:
+    build: .
+    volumes:
+      - $PWD:/workspace
+    restart: always
+    network_mode: host
+    command: python scheduler.py
+  
+  bot:
+    build: .
+    volumes:
+      - $PWD:/workspace
+    command: python bot.py
     restart: always
     network_mode: host

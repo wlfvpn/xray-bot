@@ -18,8 +18,7 @@ class LinkManager:
     def __init__(self, config):
         self.db = SQLiteDB(config['db_path'])
         self.config = config
-        self.subdomain_preffix = config['cloudflare']['prefix_subdomain_name']
-        self.domain = config['cloudflare']['domain']
+        self.domain = config['domain']
 
     def register_id(self, telegram_id, telegram_username):
         if self.db.get_uuid(telegram_id):
