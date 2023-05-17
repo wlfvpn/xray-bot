@@ -1,643 +1,129 @@
 {
-  "log": {
-    "access": "/etc/xray/access.log",
-    "loglevel": "error"
+  "log":{
+     "access": "/etc/xray/access.log",
+     "loglevel":"debug"
   },
-
-  "api": {
-    "services": [
-      "HandlerService",
-      "LoggerService",
-      "StatsService"
-    ],
-    "tag": "api"
-  },
-  "stats": {},
-  "policy": {
-    "levels": {
-      "0": {
-        "statsUserUplink": true,
-        "statsUserDownlink": true
-      }
-    },
-    "system": {
-      "statsUserUplink": true,
-      "statsUserDownlink": true,
-      "statsInboundUplink": true,
-      "statsInboundDownlink": true,
-      "statsOutboundUplink": true,
-      "statsOutboundDownlink": true
-    }
-  },
-  "inbounds": [
-    {
-      "listen": "127.0.0.1",
-      "port": 62789,
-      "protocol": "dokodemo-door",
-      "settings": {
-        "address": "127.0.0.1"
-      },
-      "tag": "api",
-      "sniffing": null
-    },
-    {
-      "tag": "Vless-TCP-XTLS",
-      "port": 443,
-      "protocol": "vless",
-      "settings": {
-        "clients": [
-          {
-            "email": "general@vless-tcp-xtls",
-            "id": "7e0a39a8-17e1-41c5-ad68-1e7e564866ca",
-            "flow": "xtls-rprx-vision",
-            "level": 0
-          }
-        ],
-        "decryption": "none",
-        "fallbacks": [
-          {
-            "name": "trh2o.womanlifefreedom.vip",
-            "alpn": "h2",
-            "dest": "@trojan-h2"
-          },
-          {
-            "name": "vlh2o.womanlifefreedom.vip",
-            "alpn": "h2",
-            "dest": "@vless-h2"
-          },
-          {
-            "name": "vmh2o.womanlifefreedom.vip",
-            "alpn": "h2",
-            "dest": "@vmess-h2"
-          },
-          {
-            "name": "ssh2o.womanlifefreedom.vip",
-            "alpn": "h2",
-            "dest": 4003
-          },
-          {
-            "path": "/vlws",
-            "dest": "@vless-ws",
-            "xver": 2
-          },
-          {
-            "path": "/vmws",
-            "dest": "@vmess-ws",
-            "xver": 2
-          },
-          {
-            "path": "/trojanws",
-            "dest": "@trojan-ws",
-            "xver": 2
-          },
-          {
-            "path": "/ssws",
-            "dest": 4001
-          },
-          {
-            "path": "/vltc",
-            "dest": "@vless-tcp",
-            "xver": 2
-          },
-          {
-            "path": "/vmtc",
-            "dest": "@vmess-tcp",
-            "xver": 2
-          },
-          {
-            "path": "/sstc",
-            "dest": 4002
-          },
-          {
-            "alpn": "h2",
-            "dest": "@trojan-tcp",
-            "xver": 2
-          },
-          {
-            "dest": "/dev/shm/h1.sock",
-            "xver": 2
-          }
-        ]
-      },
-
-      "streamSettings": {
-        "network": "tcp",
-        "security": "tls",
-        "tlsSettings": {
-          "certificates": [
-            {
-              "ocspStapling": 3600,
-              "certificateFile": "/root/xray-bot/db/cert/wlfvip.com/fullchain.pem",
-              "keyFile": "/root/xray-bot/db/cert/wlfvip.com/privkey.pem"
-            }
-          ],
-          "minVersion": "1.2",
-          "cipherSuites": "TLS_ECDHE_ECDSA_WITH_CHACHA20_POLY1305_SHA256:TLS_ECDHE_RSA_WITH_CHACHA20_POLY1305_SHA256:TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384:TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384:TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256:TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256",
-          "alpn": [
-            "h2",
-            "http/1.1"
-          ]
-        }
-      },
-      "sniffing": {
-        "enabled": true,
-        "destOverride": [
-          "http",
-          "tls"
-        ]
-      }
-    },
-    { "tag": "vless-ws",
-      "listen": "@vless-ws",
-      "protocol": "vless",
-      "settings": {
-        "clients": [
-          {
-            "email":"general@vless-ws",
-            "id": "7e0a39a8-17e1-41c5-ad68-1e7e564866ca",
-            "level": 0
-          }
-        ],
-        "decryption": "none"
-      },
-      "streamSettings": {
-        "network": "ws",
-        "security": "none",
-        "wsSettings": {
-          "acceptProxyProtocol": true,
-          "path": "/vlws"
-        }
-      },
-      "sniffing": {
-        "enabled": true,
-        "destOverride": [
-          "http",
-          "tls"
-        ]
-      }
-    },
-    { "tag": "wmess-ws",
-      "listen": "@vmess-ws",
-      "protocol": "vmess",
-      "settings": {
-        "clients": [
-          { 
-            "email": "general@vmess-ws",
-            "id": "7e0a39a8-17e1-41c5-ad68-1e7e564866ca",
-            "level": 0
-          }
-        ]
-      },
-      "streamSettings": {
-        "network": "ws",
-        "security": "none",
-        "wsSettings": {
-          "acceptProxyProtocol": true,
-          "path": "/vmws"
-        }
-      },
-      "sniffing": {
-        "enabled": true,
-        "destOverride": [
-          "http",
-          "tls"
-        ]
-      }
-    },
-    { "tag": "trojan-ws",
-      "listen": "@trojan-ws",
-      "protocol": "trojan",
-      "settings": {
-        "clients": [
-          {  
-            "email":"general@trojan-ws",
-            "password": "7e0a39a8-17e1-41c5-ad68-1e7e564866ca",
-            "level": 0
-          }
-        ]
-      },
-      "streamSettings": {
-        "network": "ws",
-        "security": "none",
-        "wsSettings": {
-          "acceptProxyProtocol": true,
-          "path": "/trojanws"
-        }
-      },
-      "sniffing": {
-        "enabled": true,
-        "destOverride": [
-          "http",
-          "tls"
-        ]
-      }
-    },
-    {
-      "tag": "shadowsocks-ws",
-      "listen": "127.0.0.1",
-      "port": 4001,
-      "protocol": "shadowsocks",
-      "settings": {
-        "method": "chacha20-ietf-poly1305",
-        "password": "7e0a39a8-17e1-41c5-ad68-1e7e564866ca"
-      },
-      "streamSettings": {
-        "network": "ws",
-        "security": "none",
-        "wsSettings": {
-          "path": "/ssws"
-        }
-      },
-      "sniffing": {
-        "enabled": true,
-        "destOverride": [
-          "http",
-          "tls"
-        ]
-      }
-    },
-    { "tag": "trojan-tcp",
-      "listen": "@trojan-tcp",
-      "protocol": "trojan",
-      "settings": {
-        "clients": [
-          {
-            "email":"general@trojan-tcp",
-            "password": "7e0a39a8-17e1-41c5-ad68-1e7e564866ca",
-            "level": 0
-          }
-        ],
-        "fallbacks": [
-          {
-            "dest": "/dev/shm/h2c.sock",
-            "xver": 2
-          }
-        ]
-      },
-      "streamSettings": {
-        "network": "tcp",
-        "security": "none",
-        "tcpSettings": {
-          "acceptProxyProtocol": true
-        }
-      },
-      "sniffing": {
-        "enabled": true,
-        "destOverride": [
-          "http",
-          "tls"
-        ]
-      }
-    },
-    {
-      "listen": "@vless-tcp",
-      "protocol": "vless",
-      "settings": {
-        "clients": [
-          {
-            "email":"general@vless-tcp",
-            "id": "7e0a39a8-17e1-41c5-ad68-1e7e564866ca",
-            "level": 0          }
-        ],
-        "decryption": "none"
-      },
-      "streamSettings": {
-        "network": "tcp",
-        "security": "none",
-        "tcpSettings": {
-          "acceptProxyProtocol": true,
-          "header": {
-            "type": "http",
-            "request": {
-              "path": [
-                "/vltc"
-              ]
-            }
-          }
-        }
-      },
-      "sniffing": {
-        "enabled": true,
-        "destOverride": [
-          "http",
-          "tls"
-        ]
-      }
-    },
-    { "tag":"vmess-tcp",
-      "listen": "@vmess-tcp",
-      "protocol": "vmess",
-      "settings": {
-        "clients": [
-          {
-            "email":"general@vmess-tcp",
-            "id": "7e0a39a8-17e1-41c5-ad68-1e7e564866ca",
-            "level": 0
-          }
-        ]
-      },
-      "streamSettings": {
-        "network": "tcp",
-        "security": "none",
-        "tcpSettings": {
-          "acceptProxyProtocol": true,
-          "header": {
-            "type": "http",
-            "request": {
-              "path": [
-                "/vmtc"
+  "inbounds":[
+     {
+        "listen": "0.0.0.0",
+        "tag": "Vless-XTLS-reality",
+        "port": 443,
+        "protocol": "vless",
+        "settings": {
+            "clients": [
+                {
+                    "id" : "general" ,
+                    "flow": "xtls-rprx-vision"
+                }
+            ],
+            "decryption": "none"
+        },
+        "streamSettings": {
+          "network": "tcp",
+          "security": "reality",
+          "realitySettings": {
+              "show": true,
+              "dest": "www.yahoo.com:443",
+              "xver": 0,
+              "maxTimeDiff": 0,
+              "minClientVer": "1.8.0",
+              "serverNames": [
+               "www.yahoo.com",
+               "www.varzesh3.com",
+               ""
               ],
-              "headers": {
-                "Host": [
-                  "www.varzesh3.com"
-                ]
-              }
-            }
-          }
-        }
-      },
-      "sniffing": {
-        "enabled": true,
-        "destOverride": [
-          "http",
-          "tls"
-        ]
-      }
-    },
-    {
-      "tag": "shadowsocks-tcp",
-      "listen": "127.0.0.1",
-      "port": 4002,
-      "protocol": "shadowsocks",
-      "settings": {
-        "method": "chacha20-ietf-poly1305",
-        "password": "7e0a39a8-17e1-41c5-ad68-1e7e564866ca"
-      },
-      "streamSettings": {
-        "network": "tcp",
-        "security": "none",
-        "tcpSettings": {
-          "header": {
-            "type": "http",
-            "request": {
-              "path": [
-                "/sstc"
+              "privateKey": "qM0mqldIHJIooZOs6YyrLFbLtb3bz-lLPRdJ5oa9CVs",
+              "pubKey": "GAUjNf1wQnDm5ziCGqRmb3yVfU9bg_UPwZ2_QU4JWRU",
+              "shortIds": [
+                  "6bb85179e30d4fc2"
               ]
-            }
           }
-        }
-      },
-      "sniffing": {
-        "enabled": true,
-        "destOverride": [
-          "http",
-          "tls"
-        ]
       }
-    },
-    {
-      "tag": "trojan-grpc",
-      "listen": "127.0.0.1",
-      "port": 3001,
-      "protocol": "trojan",
-      "settings": {
-        "clients": [
-          {
-            "email": "general@trojan-grpc",
-            "password": "7e0a39a8-17e1-41c5-ad68-1e7e564866ca",
-            "level":0
-          }
-        ]
-      },
-      "streamSettings": {
-        "network": "grpc",
-        "security": "none",
-        "grpcSettings": {
-          "serviceName": "trgrpc"
-        }
-      },
-      "sniffing": {
-        "enabled": true,
-        "destOverride": [
-          "http",
-          "tls"
-        ]
-      }
-    },
-    {
-      "tag": "vless-grpc",
-      "listen": "127.0.0.1",
-      "port": 3002,
-      "protocol": "vless",
-      "settings": {
-        "clients": [
-          { 
-            "email":"general@vless-grpc",
-            "id": "7e0a39a8-17e1-41c5-ad68-1e7e564866ca",
-            "level": 0
-          }
-        ],
-        "decryption": "none"
-      },
-      "streamSettings": {
-        "network": "grpc",
-        "security": "none",
-        "grpcSettings": {
-          "serviceName": "vlgrpc"
-        }
-      }
-    },
-    {
-      "tag": "vmess-grpc",
-      "listen": "127.0.0.1",
-      "port": 3003,
-      "protocol": "vmess",
-      "settings": {
-        "clients": [
-          { 
-            "email":"general@vmess-grpc",
-            "id": "7e0a39a8-17e1-41c5-ad68-1e7e564866ca",
-            "level": 0
-          }
-        ]
-      },
-      "streamSettings": {
-        "network": "grpc",
-        "security": "none",
-        "grpcSettings": {
-          "serviceName": "vmgrpc"
-        }
-      }
-    },
-    {
-      "listen": "127.0.0.1",
-      "port": 3004,
-      "protocol": "shadowsocks",
-      "settings": {
-        "method": "chacha20-ietf-poly1305",
-        "password": "7e0a39a8-17e1-41c5-ad68-1e7e564866ca",
-        "email": "2011@ss"
-      },
-      "streamSettings": {
-        "network": "grpc",
-        "security": "none",
-        "grpcSettings": {
-          "serviceName": "ssgrpc"
-        }
-      },
-      "sniffing": {
-        "enabled": true,
-        "destOverride": [
-          "http",
-          "tls"
-        ]
-      }
-    },
-    { "tag": "trojan-h2", 
-      "listen": "@trojan-h2",
-      "protocol": "trojan",
-      "settings": {
-        "clients": [
-          {
-            "password": "7e0a39a8-17e1-41c5-ad68-1e7e564866ca"
-          }
-        ]
-      },
-      "streamSettings": {
-        "network": "h2",
-        "security": "none",
-        "httpSettings": {
-          "path": "/trh2"
-        }
-      }
-    },
-    { "tag":"vless-h2",
-      "listen": "@vless-h2",
-      "protocol": "vless",
-      "settings": {
-        "clients": [
-          { "email":"general@vless-h2",
-            "id": "7e0a39a8-17e1-41c5-ad68-1e7e564866ca",
-            "level": 0
-          }
-        ],
-        "decryption": "none"
-      },
-      "streamSettings": {
-        "network": "h2",
-        "security": "none",
-        "httpSettings": {
-          "path": "/vlh2"
-        }
-      },
-      "sniffing": {
-        "enabled": true,
-        "destOverride": [
-          "http",
-          "tls"
-        ]
-      }
-    },
-    { "tag":"vmess-h2",
-      "listen": "@vmess-h2",
-      "protocol": "vmess",
-      "settings": {
-        "clients": [
-          { "email":"general@vmess-h2",
-            "id": "7e0a39a8-17e1-41c5-ad68-1e7e564866ca",
-            "level": 0
-          }
-        ]
-      },
-      "streamSettings": {
-        "network": "h2",
-        "security": "none",
-        "httpSettings": {
-          "path": "/vmh2"
-        }
-      },
-      "sniffing": {
-        "enabled": true,
-        "destOverride": [
-          "http",
-          "tls"
-        ]
-      }
-    },
-    {
-      "tag": "shadowsocks-h2",
-      "listen": "127.0.0.1",
-      "port": 4003,
-      "protocol": "shadowsocks",
-      "settings": {
-        "method": "chacha20-ietf-poly1305",
-        "password": "7e0a39a8-17e1-41c5-ad68-1e7e564866ca",
-        "email": "2011@ss-h2"
-      },
-      "streamSettings": {
-        "network": "h2",
-        "security": "none",
-        "httpSettings": {
-          "path": "/ssh2"
-        }
-      },
-      "sniffing": {
-        "enabled": true,
-        "destOverride": [
-          "http",
-          "tls"
-        ]
-      }
-    }
+     },
+
+     {
+        "listen":"127.0.0.1",
+        "port":62789,
+        "protocol":"dokodemo-door",
+        "settings":{
+           "address":"127.0.0.1"
+        },
+        "tag":"api",
+        "sniffing":null
+     }
   ],
-  "outbounds": [
-    {
-      "protocol": "freedom",
-      "settings": {}
-    },
-    {
-      "protocol": "blackhole",
-      "tag": "blocked"
-    },
-    {
-      "tag": "DNS-Internal",
-      "protocol": "dns",
-      "settings": {
-        "address": "127.0.0.1",
-        "port": 53
-      }
-    }
-  ],
-  "routing": {
-    "domainStrategy": "IPIfNonMatch",
-      "rules": [
+  "routing":{
+     "domainStrategy":"IPIfNonMatch",
+     "rules":[
         {
-          "inboundTag": [
-            "api"
-          ],
-          "outboundTag": "api",
-          "type": "field"
+           "inboundTag":[
+              "api"
+           ],
+           "outboundTag":"api",
+           "type":"field"
         },
         {
-          "type": "field",
-          "port": 53,
-          "network": "tcp,udp",
-          "outboundTag": "DNS-Internal"
+           "type":"field",
+           "ip":[
+              "geoip:ir",
+              "geoip:private"
+           ],
+           "outboundTag":"block"
         },
         {
-          "type": "field",
-          "domainMatcher": "mph",
-          "outboundTag": "blocked",
-          "ip": ["geoip:private","geoip:ir"
-          ]
-        },
-        {
-          "type": "field",
-          "outboundTag": "blackhole",
-          "protocol": [
-            "bittorrent"
-          ]
+           "type":"field",
+           "outboundTag":"block",
+           "domain":[
+              "geosite:category-ir",
+              "geosite:private",
+              "domain:intrack.ir",
+              "domain:divar.ir",
+              "domain:irancell.ir",
+              "domain:yooz.ir",
+              "domain:iran-cell.com",
+              "domain:irancell.i-r",
+              "domain:shaparak.ir",
+              "domain:learnit.ir",
+              "domain:yooz.ir",
+              "domain:baadesaba.ir",
+              "domain:webgozar.ir"
+           ]
         }
-      ]
+     ]
+  },
+  "outbounds":[
+     {
+        "protocol":"freedom",
+        "tag":"direct"
+     },
+     {
+        "protocol":"blackhole",
+        "tag":"block"
+     }
+  ],
+  "api":{
+     "services":[
+        "HandlerService",
+        "LoggerService",
+        "StatsService"
+     ],
+     "tag":"api"
+  },
+  "stats":{
+     
+  },
+  "policy":{
+     "levels":{
+        "0":{
+           "statsUserUplink":true,
+           "statsUserDownlink":true
+        }
+     },
+     "system":{
+        "statsInboundUplink":true,
+        "statsInboundDownlink":true,
+        "statsOutboundUplink":true,
+        "statsOutboundDownlink":true
+     }
   }
 }

@@ -36,7 +36,7 @@ class TrafficManager:
         self.logger.info("Updated traffic.")
     
     def remove_users_higher(self):
-        inbounds = ["vless-ws","vless-grpc","trojan-ws","trojan-grpc","vmess-ws","vmess-grpc"]
+        inbounds = ["Vless-XTLS-reality"]
         for inbound in inbounds:
             emails = self.db.get_uuid_by_usage(self.config['traffic_limit'])
             for email in emails:

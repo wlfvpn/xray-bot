@@ -1,0 +1,9 @@
+telegram_bot_token: "5737744160:AAHWNc3rnHF_uoOIdo5sNff-eUGhdk-tsvE" #change it
+maintenance: false #turn it to true to force the bot to go into maintanance mode.
+db_path: "db/database.db"
+max_users: 3000
+traffic_limit: 8716192768 #5 GB
+outline_ip: "100.25.47.59"
+telegram_channel_id: "@WomanLifeFreedomVPN"
+domain: "135.181.35.207"
+ip: "135.181.35.207"
