@@ -2,7 +2,6 @@
 import json
 import os
 import sys
-from tqdm import tqdm
 import uuid
 repo_folder = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.append(repo_folder)
@@ -27,7 +26,8 @@ with open(f'{repo_folder}/scripts/base.json', 'r') as file:
     data = json.load(file)
 db = SQLiteDB(db_path)
 
-for i in tqdm(range(quantity)):
+for i in range(quantity):
+    print(i)
     random_uuid = str(uuid.uuid4())
     client = {'email':f'{random_uuid}', 'id':  f'{random_uuid}' ,'password': f'{random_uuid}',"flow": "xtls-rprx-vision", 'level': 0}
     added = False

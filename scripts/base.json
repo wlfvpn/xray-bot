@@ -1,7 +1,7 @@
 {
   "log":{
      "access": "/etc/xray/access.log",
-     "loglevel":"debug"
+     "loglevel":"warn"
   },
   "inbounds":[
      {
@@ -22,7 +22,7 @@
           "network": "tcp",
           "security": "reality",
           "realitySettings": {
-              "show": true,
+              "show": false,
               "dest": "www.yahoo.com:443",
               "xver": 0,
               "maxTimeDiff": 0,
@@ -61,13 +61,21 @@
            ],
            "outboundTag":"api",
            "type":"field"
+        },            
+        {
+         "type": "field",
+         "domain": [
+             "domain:google.com",
+             "domain:www.google.com"
+         ],
+         "outboundTag": "wireguard-1"
         },
         {
            "type":"field",
            "ip":[
               "geoip:ir",
               "geoip:private"
-           ],
+            ],
            "outboundTag":"block"
         },
         {
@@ -86,8 +94,7 @@
               "domain:learnit.ir",
               "domain:yooz.ir",
               "domain:baadesaba.ir",
-              "domain:webgozar.ir"
-           ]
+              "domain:webgozar.ir"           ]
         }
      ]
   },
@@ -99,6 +106,20 @@
      {
         "protocol":"blackhole",
         "tag":"block"
+     },
+     {
+      "protocol": "wireguard",
+      "settings": {
+        "secretKey": "1KJELdAYjipPr8BCiFefMUgtz4BbeYmvy1YK2eMD3iUY=",
+        "address": ["172.16.0.2/32", "2606:4700:110:8293:d492:8f00:7aef:ee56/128"],
+        "peers": [
+          {
+            "publicKey": "bmXOC+F1FxEMF9dyiK2H5/1SUtzH0JuVo51h2wPfgyo=",
+            "endpoint": "engage.cloudflareclient.com:2408"
+          }
+        ]
+      },
+      "tag": "wireguard-1"
      }
   ],
   "api":{

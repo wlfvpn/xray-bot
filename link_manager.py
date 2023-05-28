@@ -232,4 +232,4 @@ class LinkManager:
 
     def get_usage(self, telegram_id):
         usage = self.db.get_usage(telegram_id)
-        return f"Used {round(usage/1024**3,2)}/{round(self.config['traffic_limit']/1024**3,2)} GB"
+        return f"Used {round(usage/1024.0**3,2)}/{round(self.config['traffic_limit']/1024**3,2)} GB. This will reset weekly on Mondays."

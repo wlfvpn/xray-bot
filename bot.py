@@ -24,10 +24,18 @@ logger = logging.getLogger(__name__)
 
 async def instructions(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await context.bot.send_message(chat_id=update.effective_chat.id, text="""Download the applications below and import the generated link.
-                                                                          <b>Android:</b> V2rayNG
-                                                                          <b>IOS:</b> wingsX
+                                                                          <b>Android:</b> V2rayNG prerelease
+                                                                          <b>IOS:</b> Foxray
                                                                           <b>Windows:</b> v2rayN
                                                                           <b>MacOS:</b> V2RayXS """, parse_mode="HTML")
+async def contribute(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    await context.bot.send_message(chat_id=update.effective_chat.id, text="""
+    اگه تمایل به کمک در هزینه سرورها رو دارید میتونین به ادرس زیر دونیت کنین و به من مسیج بدید😊
+دونیت ها رو تو کانال @womanlifefreedomvpndonates اعلام میکنم.
+
+ادرس Tron: 
+TADXKDZggA6RcVYuC1uf6AysDLiZjTN93k
+                                                                            """, parse_mode="HTML")
 
 
 async def gen_link(update: Update, context: ContextTypes.DEFAULT_TYPE, type):
@@ -75,14 +83,15 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     if maintenance:
         return
 
-    keyboard = [[ InlineKeyboardButton("REALITY", callback_data="gen_reality")],
-                [InlineKeyboardButton("گزارش استفاده", callback_data="usage")],
+    keyboard = [[ InlineKeyboardButton("REALITY همراه اول", callback_data="gen_reality")],
+                [InlineKeyboardButton(" گزارش استفاده همراه اول" , callback_data="usage")],
+                [InlineKeyboardButton("REALITY ایرانسل", url="https://t.me/WomanLifeFreedomVPNTest_bot")],
                 [InlineKeyboardButton(
                     "Outline VPN گرفتن لینک", callback_data="gen_outline")],
                 [InlineKeyboardButton(
                     "رو چه نرم افزاری کار میکنه؟", callback_data="instructions")],
                 [InlineKeyboardButton(
-                    "می خواهم کمک کنم", url="https://t.me/+0l8_7FaM-UkyNzIx", callback_data="contribute")],
+                    "می خواهم کمک کنم", callback_data="contribute")],
                 [InlineKeyboardButton(
                     "لینک کانال", url="https://t.me/WomanLifeFreedomVPN", callback_data="contact_support")],
                 [InlineKeyboardButton("تست سرعت", web_app=WebAppInfo(url="https://pcmag.speedtestcustom.com"))]]
@@ -150,6 +159,8 @@ async def button(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     await query.answer()
     if query.data == "instructions":
         await instructions(update, context)
+    elif query.data == "contribute":
+        await contribute(update, context)
     elif query.data == "gen_trojan":
         await gen_link(update, context, 'trojan')
     elif query.data == "gen_vless":
